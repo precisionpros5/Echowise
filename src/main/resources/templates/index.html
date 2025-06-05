@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tip Calculator</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+
+    <main class="back">
+        <header class="header">
+            <div class="header-logo"><img src="assets/logo1.png" alt="Logo"></div>
+
+        </header>
+        <form class="container" action="/calculate" method="post">
+            <h2 style="color: #e75b1e; margin: 2px;">Tip Calculator</h2>
+
+            <label for="billAmount">Bill Amount</label>
+            <input type="number" id="billAmount" name="billAmount" placeholder="Enter bill amount" min="0">
+
+            <label for="serviceRating">Service Rating:<span id="slider_value">1</span><span id="emoji">😡</span></label>
+            <input type="range" id="serviceRating" name="serviceRating" min="1" max="10" value="1" style="accent-color: #e75b1e;">
+
+
+            <label for="numPeople">Number of People</label>
+            <input type="number" name="numPeople" id="numPeople" placeholder="Enter number of people" min="1">
+
+            <button type="submit">Calculate</button>
+
+
+           
+            
+<p th:text="${tipAmount}">Tip Amount: <span ></span></p>
+        <p>Total Amount: <p th:text="${totalAmount}"></p></p>
+        <p>Share Amount: <p th:text="${shareAmount}"></p></p>
+       
+            
+
+            <button style="display:none;margin-top: 10px;"
+                onclick="document.getElementById('id01').style.display='block'" id="gpay">Show QR to pay</button>
+
+            <div id="id01" class="modal">
+                <div class="modal-content">
+                    <img src="assets/gpay-accepted here.jpg" />
+                    <hr>
+                    <p>Scan and pay here</p>
+                    <span onclick="document.getElementById('id01').style.display='none'" class="model-display-topright"
+                        style="font-size: 30px;padding: 0px 30px;cursor: pointer;">&times;</span>
+                    <div id="qrcode"></div>
+                    <img src="assets/qr_down.jpg" id="qrdown" />
+                </div>
+            </div>
+
+        </form>
+
+
+
+    </main>
+    <script src="index.js"></script>
+</body>
+
+</html>
