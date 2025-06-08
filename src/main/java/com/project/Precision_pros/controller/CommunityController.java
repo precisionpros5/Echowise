@@ -17,6 +17,7 @@ import com.project.Precision_pros.service.CommunityService;
 
 @RestController
 @RequestMapping("/api/communities")
+
 public class CommunityController {
 
 	    @Autowired
