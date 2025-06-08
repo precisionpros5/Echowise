@@ -4,11 +4,25 @@ public class CommunityResponse {
 
     private String name;
     private String code;
+    private String description;
 
-    public CommunityResponse(String name, String code) {
+
+    public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public CommunityResponse(String name, String code) {
         
         this.name = name;
         this.code = code;
+    }
+    public CommunityResponse(String name, String code,String desc) {
+        
+        this.name = name;
+        this.code = code;
+        this.description=desc;
     }
 
 

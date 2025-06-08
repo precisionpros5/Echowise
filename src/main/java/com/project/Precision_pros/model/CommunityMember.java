@@ -3,48 +3,49 @@ package com.project.Precision_pros.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
- 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
  
 import java.time.LocalDateTime;
  
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+@Entity
+@Table(name = "CommunityMembers")
 public class CommunityMember {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long communityMemberId;
+
+	private Long userId;
+	private String communityId; // Match with communityCode
+	private LocalDateTime joinDate;
+
  
-    private Integer communityMemberId;
  
-    @NotNull
-    private Integer userId;
  
-    @NotNull
-    private Integer communityId;
- 
-    private LocalDateTime joinDate;
- 
-    public Integer getCommunityMemberId() {
-        return communityMemberId;
-    }
- 
-    public void setCommunityMemberId(Integer communityMemberId) {
-        this.communityMemberId = communityMemberId;
-    }
- 
-    public Integer getUserId() {
+    public Long getCommunityMemberId() {
+		return communityMemberId;
+	}
+
+	public void setCommunityMemberId(Long communityMemberId) {
+		this.communityMemberId = communityMemberId;
+	}
+
+	public Long getUserId() {
         return userId;
     }
  
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
  
-    public Integer getCommunityId() {
+    public String getCommunityId() {
         return communityId;
     }
  
-    public void setCommunityId(Integer communityId) {
-        this.communityId = communityId;
+    public void setCommunityId(String string) {
+        this.communityId = string;
     }
  
     public LocalDateTime getJoinDate() {
