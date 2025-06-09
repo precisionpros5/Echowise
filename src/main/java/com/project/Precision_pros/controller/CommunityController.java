@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.CommunityRequest;
 import com.project.Precision_pros.payload.request.JoinCommunityRequest;
+import com.project.Precision_pros.payload.request.QuestionRequest;
 import com.project.Precision_pros.payload.request.UpdateCommunityRequest;
 import com.project.Precision_pros.payload.response.CommunityResponse;
+import com.project.Precision_pros.payload.response.QuestionResponse;
 import com.project.Precision_pros.repository.UserRepository;
 import com.project.Precision_pros.security.jwt.JwtUtils;
 import com.project.Precision_pros.service.CommunityService;
+import com.project.Precision_pros.service.QuestionService;
 
 @RestController
 @RequestMapping("/api/communities")
@@ -37,6 +40,8 @@ public class CommunityController {
 	    @Autowired
 	    private UserRepository userRepository;
 
+		@Autowired
+		private QuestionService questionService;
 	    @PostMapping
 	    public ResponseEntity<?> createCommunity(
 	            @RequestBody CommunityRequest request,
@@ -71,6 +76,7 @@ public class CommunityController {
 				return ResponseEntity.ok(communities);
 				
 	}
+
 	
 	    @PostMapping("/join")
 	    public ResponseEntity<?> joinCommunity(@RequestBody JoinCommunityRequest request,
