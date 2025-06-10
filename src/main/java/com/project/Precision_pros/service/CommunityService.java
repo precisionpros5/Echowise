@@ -55,6 +55,7 @@ public class CommunityService {
 
     public List<CommunityResponse> getCommunitiesInvolved(Long userId) {
         List<Community> communities = communityRepository.findCommunitiesInvolvedByUserId(userId);
+        
         List<CommunityResponse> res = communities.stream()
             .map(c -> new CommunityResponse(c.getName(),c.getCommunityCode(),c.getDescription()))
             .collect(Collectors.toList());

@@ -33,5 +33,13 @@ public class RoomRequest {
 	public void setMemberUsernames(List<String> memberUsernames) {
 		this.memberUsernames = memberUsernames;
 	}
+	public RoomRequest(String name, String description, Long creatorUserId, List<String> memberUsernames) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.creatorUserId = creatorUserId;
+		this.memberUsernames = memberUsernames;
+	}
+	
 }
 

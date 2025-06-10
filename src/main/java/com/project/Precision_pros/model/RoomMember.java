@@ -33,7 +33,7 @@ public class RoomMember {
     private Long userId;
  
     @NotNull
-    private Integer roomId;
+    private Long roomId;
  
     private LocalDateTime joinDate;
  
@@ -47,11 +47,11 @@ public class RoomMember {
         this.userId = userId;
     }
  
-    public Integer getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
  
-    public void setRoomId(Integer roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
  

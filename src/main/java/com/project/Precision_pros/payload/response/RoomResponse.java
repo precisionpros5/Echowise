@@ -2,18 +2,18 @@ package com.project.Precision_pros.payload.response;
 
 
 public class RoomResponse {
-    private Integer id;
+    private Long id;
     private String name;
     private String communityId;
-    public RoomResponse(Integer id, String name, String communityId) {
-		this.id = id;
+    public RoomResponse(Long long1, String name, String communityId) {
+		this.id = long1;
 		this.name = name;
 		this.communityId = communityId;
 	}
-    public int getId() {
+    public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	

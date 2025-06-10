@@ -18,13 +18,16 @@ import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.CommunityRequest;
 import com.project.Precision_pros.payload.request.JoinCommunityRequest;
 import com.project.Precision_pros.payload.request.QuestionRequest;
+import com.project.Precision_pros.payload.request.RoomRequest;
 import com.project.Precision_pros.payload.request.UpdateCommunityRequest;
 import com.project.Precision_pros.payload.response.CommunityResponse;
 import com.project.Precision_pros.payload.response.QuestionResponse;
+import com.project.Precision_pros.repository.RoomRepository;
 import com.project.Precision_pros.repository.UserRepository;
 import com.project.Precision_pros.security.jwt.JwtUtils;
 import com.project.Precision_pros.service.CommunityService;
 import com.project.Precision_pros.service.QuestionService;
+import com.project.Precision_pros.service.RoomService;
 
 @RestController
 @RequestMapping("/api/communities")
@@ -42,6 +45,11 @@ public class CommunityController {
 
 		@Autowired
 		private QuestionService questionService;
+		
+		@Autowired
+	    private  RoomService roomService;
+		@Autowired
+		private RoomRepository roomRepository;
 	    @PostMapping
 	    public ResponseEntity<?> createCommunity(
 	            @RequestBody CommunityRequest request,
@@ -54,6 +62,15 @@ public class CommunityController {
 	        
 
 	        CommunityResponse response = communityService.createCommunity(request, user.getId());
+
+	        try {
+	        	List<String> member = List.of(username);
+	        	RoomRequest roomreq = new RoomRequest("public Room", "for all user in Community", user.getId(), member);
+	        	 roomService.createRoom(Long.parseLong(response.getCode()), roomreq);
+	        	} catch (Exception e) {
+	        	System.out.print("Room creation failed"+ e);
+	        	}
+
 	        return ResponseEntity.ok(response);
 	    }
 	    
@@ -87,6 +104,13 @@ public class CommunityController {
 
 	    			
 	        String result = communityService.joinCommunity(request.getCommunityCode(), user.getId());
+	        try {
+	        	List<String> member = List.of(username);
+	        	List<Long> roomid=roomRepository.findPublicRoomIdsByCommunityId(Long.parseLong(request.getCommunityCode()));
+	        	roomService.addMembersToRoom(roomid.getFirst(), member, username);
+	        	} catch (Exception e) {
+	        	System.out.print("Room creation failed"+ e);
+	        	}
 	        return ResponseEntity.ok(result);
 	    
 	    }

@@ -1,5 +1,6 @@
 package com.project.Precision_pros.service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import com.project.Precision_pros.model.RoomMember;
 import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.RoomRequest;
 import com.project.Precision_pros.payload.response.RoomResponse;
+import com.project.Precision_pros.repository.CommunityMemberRepository;
 import com.project.Precision_pros.repository.CommunityRepository;
 import com.project.Precision_pros.repository.RoomMemberRepository;
 import com.project.Precision_pros.repository.RoomRepository;
@@ -34,6 +36,8 @@ public class RoomService {
     private  UserRepository userRepository;
 	@Autowired
     private  RoomMemberRepository roomMemberRepository;
+	@Autowired
+	private CommunityMemberRepository communityMemberRepository;
 
     
     public List<RoomResponse> getRoomsByCommunityAndUser(Long communityId, String username) {
@@ -66,7 +70,12 @@ public class RoomService {
         DiscussionRoom room = new DiscussionRoom();
         room.setName(request.getName());
         room.setCommunity(community);
+        if("public Room".equals(request.getName())) {
+        	room.setIsPrivate(false);
+        }
+        else {
         room.setIsPrivate(true);
+        }
         room.setCreationDate(LocalDateTime.now());
         room.setCreator(user);	
         
@@ -92,20 +101,34 @@ public class RoomService {
 
 
     
-//    public void addMembersToRoom(Long roomId, List<String> newMemberUsernames, String requestingUsername) {
-//        DiscussionRoom room = roomRepository.findById(roomId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
-//
-//        User requestingUser = userRepository.findByUsername(requestingUsername)
-//                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-//
-//        if (!room.getMembers().contains(requestingUser)) {
-//            throw new AccessDeniedException("Only room members can add new members.");
-//        }
-//
-//        List<User> newMembers = userRepository.findByUsernameIn(newMemberUsernames);
-//        room.getMembers().addAll(newMembers);
-//        roomRepository.save(room);
-//    }
-}
 
+   
+    public void addMembersToRoom(Long roomId, List<String> newMemberUsernames, String requestingUsername) {
+        DiscussionRoom room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        User requestingUser = userRepository.findByUsername(requestingUsername)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isMember = roomMemberRepository.existsByRoomIdAndUserId(roomId, requestingUser.getId());
+        if (room.getIsPrivate() && !isMember) {
+            throw new RuntimeException("Only room members can add new members.");
+        }
+
+        List<User> newUsers = userRepository.findByUsernameIn(newMemberUsernames);
+        for (User newUser : newUsers) {
+            boolean isCommunityMember = communityMemberRepository.existsByCommunityIdAndUserId(
+                    room.getCommunity().getCommunityCode(), newUser.getId());
+            if (!isCommunityMember) {
+                throw new IllegalArgumentException("User " + newUser.getUsername() + " is not a member of the community.");
+            }
+
+            RoomMember roomMember = new RoomMember();
+            roomMember.setRoomId(room.getRoomId());
+            roomMember.setUserId(newUser.getId());
+            roomMember.setJoinDate(LocalDateTime.now());
+            roomMemberRepository.save(roomMember);
+        }
+    }
+
+}

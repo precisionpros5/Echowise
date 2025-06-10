@@ -13,6 +13,8 @@ import com.project.Precision_pros.model.CommunityMember;
 public interface CommunityMemberRepository extends JpaRepository<CommunityMember, Long> {
 	boolean existsByUserIdAndCommunityId(Long userId, String communityId);
 
+	boolean existsByCommunityIdAndUserId(String communityCode, Long id);
+
 
 }
 

@@ -34,10 +34,10 @@ public class DiscussionRoomsController {
     	return ResponseEntity.ok(roomService.getRoomsByCommunityAndUser(communityId,username));
     }
 
-//    @GetMapping("/rooms/{roomId}")
-//    public ResponseEntity<RoomResponse> getRoomById(@PathVariable Long roomId) {
-//        return ResponseEntity.ok(roomService.getRoomById(roomId));
-//    }
+    @GetMapping("/rooms/{roomId}")
+    public ResponseEntity<RoomResponse> getRoomById(@PathVariable Long roomId) {
+        return ResponseEntity.ok(roomService.getRoomById(roomId));
+    }
 
     @PostMapping("/communities/{communityId}/rooms")
     public ResponseEntity<RoomResponse> createRoom(@PathVariable Long communityId,
@@ -45,19 +45,15 @@ public class DiscussionRoomsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.createRoom(communityId, request));
     }
 
-//    @PostMapping("/rooms/{roomId}/join")
-//    public ResponseEntity<Void> joinRoom(@PathVariable Long roomId, Principal principal) {
-//        roomService.joinRoom(roomId, principal.getName());
-//        return ResponseEntity.ok().build();
-//    }
 
-//    @PostMapping("/rooms/{roomId}/members")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<Void> addMembers(@PathVariable Long roomId,
-//                                           @RequestBody List<String> usernames,
-//                                           Principal principal) {
-//        roomService.addMembersToRoom(roomId, usernames, principal.getName());
-//        return ResponseEntity.ok().build();
-//    }
+
+    @PostMapping("/rooms/{roomId}/members")
+    
+    public ResponseEntity<Void> addMembers(@PathVariable Long roomId,
+                                           @RequestBody List<String> usernames,@CookieValue("precisionPros") String jwtToken) {
+    	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+        roomService.addMembersToRoom(roomId, usernames, username);
+        return ResponseEntity.ok().build();
+    }
 }
 

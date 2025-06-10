@@ -14,7 +14,7 @@ public class DiscussionRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
-    private Integer roomId;
+    private Long roomId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id", nullable = false)
@@ -48,11 +48,11 @@ public class DiscussionRoom {
     }
 
     // Getters and Setters
-    public Integer getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(Integer roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
