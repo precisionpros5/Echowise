@@ -1,9 +1,20 @@
 package com.project.Precision_pros.model;
 
 
-import javax.persistence.*;
-import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "votes")
@@ -26,9 +37,12 @@ public class Vote {
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
-    private String voteType; // Consider using Enum
+    private VoteType voteType;
+
 
     @Column(nullable = false)
     @NotNull
@@ -66,16 +80,17 @@ public class Vote {
     public void setAnswer(Answer answer) {
         this.answer = answer;
     }
+    
 
-    public String getVoteType() {
-        return voteType;
-    }
+    public VoteType getVoteType() {
+		return voteType;
+	}
 
-    public void setVoteType(String voteType) {
-        this.voteType = voteType;
-    }
+	public void setVoteType(VoteType voteType) {
+		this.voteType = voteType;
+	}
 
-    public LocalDateTime getVoteDate() {
+	public LocalDateTime getVoteDate() {
         return voteDate;
     }
 
