@@ -1,7 +1,8 @@
 package com.project.Precision_pros.model;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "DiscussionRooms", indexes = {
@@ -32,18 +33,17 @@ public class DiscussionRoom {
     @JoinColumn(name = "creator_user_id", nullable = false)
     private User creator;
 
-    @Column(name = "access_code", length = 255)
-    private String accessCode;
+ 
 
     // Constructors
     public DiscussionRoom() {}
 
-    public DiscussionRoom(Community community, String name, Boolean isPrivate, User creator, String accessCode) {
+    public DiscussionRoom(Community community, String name, Boolean isPrivate, User creator) {
         this.community = community;
         this.name = name;
         this.isPrivate = isPrivate;
         this.creator = creator;
-        this.accessCode = accessCode;
+        
         this.creationDate = LocalDateTime.now();
     }
 
@@ -96,11 +96,5 @@ public class DiscussionRoom {
         this.creator = creator;
     }
 
-    public String getAccessCode() {
-        return accessCode;
-    }
-
-    public void setAccessCode(String accessCode) {
-        this.accessCode = accessCode;
-    }
+ 
 }

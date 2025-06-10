@@ -3,39 +3,47 @@ package com.project.Precision_pros.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
- 
+import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
  
 import java.time.LocalDateTime;
+
+
  
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class RoomMember {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer roomMemberId;
  
-    private Integer roomMemberId;
- 
-    @NotNull
-    private Integer userId;
+    public Integer getRoomMemberId() {
+		return roomMemberId;
+	}
+
+	public void setRoomMemberId(Integer roomMemberId) {
+		this.roomMemberId = roomMemberId;
+	}
+
+	@NotNull
+    
+    private Long userId;
  
     @NotNull
     private Integer roomId;
  
     private LocalDateTime joinDate;
  
-    public Integer getRoomMemberId() {
-        return roomMemberId;
-    }
+  
  
-    public void setRoomMemberId(Integer roomMemberId) {
-        this.roomMemberId = roomMemberId;
-    }
- 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
  
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
  
