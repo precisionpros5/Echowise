@@ -25,7 +25,7 @@ public class AnswerController {
     // question status should change --- if question is answered - done
     @PostMapping("/{questionId}/answers")
     public ResponseEntity<AnswerResponse> postAnswer(
-            @PathVariable int questionId,
+            @PathVariable Long questionId,
             @RequestBody AnswerRequest request,
             @CookieValue("precisionPros") String jwtToken) {
     	
@@ -36,7 +36,7 @@ public class AnswerController {
     }
 
 	@GetMapping("/{questionId}/answers")
-	public ResponseEntity<List<AnswerResponse>> getAnswers(@PathVariable int questionId,
+	public ResponseEntity<List<AnswerResponse>> getAnswers(@PathVariable Long questionId,
 			@CookieValue("precisionPros") String jwtToken) {
 		
 		

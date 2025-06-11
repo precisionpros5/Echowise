@@ -39,7 +39,7 @@ public class AnswerService {
     
     
     
-    public AnswerResponse postAnswer(int questionId, String username, AnswerRequest request) {
+    public AnswerResponse postAnswer(Long questionId, String username, AnswerRequest request) {
     	
 //    	System.out.println("YOur question Id : "+questionId);
 //    	System.out.println(questionRepository.findAll());
@@ -89,7 +89,7 @@ public class AnswerService {
     }
 
 
-    public List<AnswerResponse> getAnswersByQuestionId(int questionId,String username) {
+    public List<AnswerResponse> getAnswersByQuestionId(Long questionId,String username) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question with ID " + questionId + " not found."));
 

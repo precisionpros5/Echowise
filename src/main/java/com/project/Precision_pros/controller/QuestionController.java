@@ -36,7 +36,7 @@ public class QuestionController {
 
 	// GET /api/questions/{id}
 	@GetMapping("/questions/{id}")
-	public ResponseEntity<QuestionResponse> getQuestionById(@PathVariable Integer id) {
+	public ResponseEntity<QuestionResponse> getQuestionById(@PathVariable Long id) {
 		return ResponseEntity.ok(questionService.getQuestionById(id));
 	}
 
@@ -53,7 +53,7 @@ public class QuestionController {
 
 	// PUT /api/questions/{id}
 	@PutMapping("/questions/{id}")
-	public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer id,
+	public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Long id,
 			@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody QuestionRequest request) {
 
 		String username = userDetails.getUsername();
@@ -62,11 +62,17 @@ public class QuestionController {
 
 	// DELETE /api/questions/{id}
 	@DeleteMapping("/questions/{id}")
-	public ResponseEntity<?> deleteQuestion(@PathVariable Integer id,
+	public ResponseEntity<?> deleteQuestion(@PathVariable Long id,
 			@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
 		String username = userDetails.getUsername();
 		questionService.deleteQuestion(id, username);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@GetMapping("/by-tags")
+	public ResponseEntity<List<QuestionResponse>> getQuestionsByTags(@RequestParam List<String> tags) {
+	    return ResponseEntity.ok(questionService.getQuestionsByTags(tags));
+	}
+
 }

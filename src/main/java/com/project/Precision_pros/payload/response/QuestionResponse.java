@@ -3,10 +3,11 @@ package com.project.Precision_pros.payload.response;
 import com.project.Precision_pros.model.QuestionStatus;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class QuestionResponse {
-	private Integer questionId;
+	private Long questionId;
 	private String title;
 	private String description;
 	private LocalDateTime creationDate;
@@ -14,9 +15,18 @@ public class QuestionResponse {
 	private String username;
 	private String communityCode;
 	private QuestionStatus status;
+	private List<String> tags;
 
-	public QuestionResponse(Integer questionId, String title, String description, LocalDateTime creationDate,
-			LocalDateTime lastEditedDate, String username, String communityCode, QuestionStatus status) {
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+
+	public QuestionResponse(Long questionId, String title, String description, LocalDateTime creationDate,
+			LocalDateTime lastEditedDate, String username, String communityCode, QuestionStatus status,List<String> tags) {
 		super();
 		this.questionId = questionId;
 		this.title = title;
@@ -26,13 +36,14 @@ public class QuestionResponse {
 		this.username = username;
 		this.communityCode = communityCode;
 		this.status = status;
+		this.tags=tags;
 	}
 
-	public Integer getQuestionId() {
+	public Long getQuestionId() {
 		return questionId;
 	}
 
-	public void setQuestionId(Integer questionId) {
+	public void setQuestionId(Long questionId) {
 		this.questionId = questionId;
 	}
 

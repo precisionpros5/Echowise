@@ -16,7 +16,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer questionId;
+    private Long questionId;
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -34,11 +34,11 @@ public class Question {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Integer getQuestionId() {
+    public Long getQuestionId() {
 		return questionId;
 	}
 
-	public void setQuestionId(Integer questionId) {
+	public void setQuestionId(Long questionId) {
 		this.questionId = questionId;
 	}
 

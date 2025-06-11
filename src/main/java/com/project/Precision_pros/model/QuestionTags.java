@@ -1,6 +1,8 @@
 package com.project.Precision_pros.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+;
 @Entity
 @Table(name = "QuestionTags", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"question_id", "tag_id"})
@@ -10,7 +12,7 @@ public class QuestionTags {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_tag_id")
-    private Integer questionTagId;
+    private Long questionTagId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
@@ -29,11 +31,11 @@ public class QuestionTags {
     }
 
     // Getters and Setters
-    public Integer getQuestionTagId() {
+    public Long getQuestionTagId() {
         return questionTagId;
     }
 
-    public void setQuestionTagId(Integer questionTagId) {
+    public void setQuestionTagId(Long questionTagId) {
         this.questionTagId = questionTagId;
     }
 

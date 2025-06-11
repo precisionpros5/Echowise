@@ -1,6 +1,7 @@
 package com.project.Precision_pros.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,11 +11,15 @@ import org.springframework.stereotype.Service;
 import com.project.Precision_pros.model.Community;
 import com.project.Precision_pros.model.Question;
 import com.project.Precision_pros.model.QuestionStatus;
+import com.project.Precision_pros.model.QuestionTags;
+import com.project.Precision_pros.model.Tag;
 import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.QuestionRequest;
 import com.project.Precision_pros.payload.response.QuestionResponse;
 import com.project.Precision_pros.repository.CommunityRepository;
 import com.project.Precision_pros.repository.QuestionRepository;
+import com.project.Precision_pros.repository.QuestionTagsRepository;
+import com.project.Precision_pros.repository.TagRepository;
 import com.project.Precision_pros.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -30,16 +35,24 @@ public class QuestionService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+    @Autowired
+    private TagRepository tagRepository;
 
+    @Autowired
+    private QuestionTagsRepository questionTagsRepository;
+    
 	public List<QuestionResponse> getAllQuestionsByCommunity(String communityCode) {
 		List<Question> questions = questionRepository.findByCommunity_CommunityCode(communityCode);
 		System.out.print(questions);
+		
 		return questions.stream().map(this::mapToResponse).collect(Collectors.toList());
 	}
 
-	public QuestionResponse getQuestionById(Integer questionId) {
+	public QuestionResponse getQuestionById(Long questionId) {
 		Question question = questionRepository.findById(questionId)
 				.orElseThrow(() -> new EntityNotFoundException("Question not found"));
+		
 		return mapToResponse(question);
 	}
 
@@ -60,10 +73,21 @@ public class QuestionService {
 		question.setStatus(QuestionStatus.OPEN);
 		
 		Question saved = questionRepository.save(question);
+        List<String> tagResponses = new ArrayList<>();
+
+        for (String tagName : request.getTags()) {
+            Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+
+            QuestionTags questionTag = new QuestionTags();
+            questionTag.setQuestion(question);
+            questionTag.setTag(tag);
+            questionTagsRepository.save(questionTag);
+        }
 		return mapToResponse(saved);
 	}
 
-	public QuestionResponse updateQuestion(Integer questionId, String username, QuestionRequest request) {
+	public QuestionResponse updateQuestion(Long questionId, String username, QuestionRequest request) {
 		Question question = questionRepository.findById(questionId)
 				.orElseThrow(() -> new EntityNotFoundException("Question not found"));
 
@@ -79,7 +103,7 @@ public class QuestionService {
 		return mapToResponse(updated);
 	}
 
-	public void deleteQuestion(Integer questionId, String username) {
+	public void deleteQuestion(Long questionId, String username) {
 		Question question = questionRepository.findById(questionId)
 				.orElseThrow(() -> new EntityNotFoundException("Question not found"));
 
@@ -91,9 +115,28 @@ public class QuestionService {
 	}
 
 	private QuestionResponse mapToResponse(Question question) {
+
+		List<QuestionTags> questionTags = questionTagsRepository.findByQuestion_QuestionId(question.getQuestionId());
+		List<String> tagNames = questionTags.stream().map(qt -> qt.getTag().getName())
+		.collect(Collectors.toList());
+
 		return new QuestionResponse(question.getQuestionId(), question.getTitle(), question.getDescription(),
 				question.getCreationDate(), question.getLastEditedDate(), question.getUser().getUsername(),
-				question.getCommunity().getCommunityCode(), question.getStatus());
+				question.getCommunity().getCommunityCode(), question.getStatus(),tagNames);
 	}
+	public List<QuestionResponse> getQuestionsByTags(List<String> tagNames) {
+	    List<Question> questions = questionTagsRepository.findQuestionsByTagNames(tagNames);
+	    return questions.stream()
+	        .map(this::mapToResponse) // Include tags in this method
+	        .collect(Collectors.toList());
+	}
+
+	
 }
+
+
+
+
+  
+
 

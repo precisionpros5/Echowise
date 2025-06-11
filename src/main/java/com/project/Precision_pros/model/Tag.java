@@ -1,7 +1,8 @@
 package com.project.Precision_pros.model;
 
 
-import javax.persistence.*;
+ 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -18,7 +19,16 @@ public class Tag {
     @Size(min = 1, max = 50)
     private String name;
 
-    // Getters and Setters
+    public Tag(String tagName) {
+		this.name=tagName;
+	}
+
+
+protected Tag() {
+}
+
+
+	// Getters and Setters
     public Long getTagId() {
         return tagId;
     }
