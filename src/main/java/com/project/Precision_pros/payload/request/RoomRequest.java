@@ -5,7 +5,6 @@ import java.util.List;
 public class RoomRequest {
     private String name;
     private String description;
-    private Long creatorUserId;
     private List<String> memberUsernames;
 	public String getName() {
 		return name;
@@ -20,12 +19,7 @@ public class RoomRequest {
 		this.description = description;
 	}
 	
-	public Long getCreatorUserId() {
-		return creatorUserId;
-	}
-	public void setCreatorUserId(Long creatorUserId) {
-		this.creatorUserId = creatorUserId;
-	}
+
 	
 	public List<String> getMemberUsernames() {
 		return memberUsernames;
@@ -33,11 +27,10 @@ public class RoomRequest {
 	public void setMemberUsernames(List<String> memberUsernames) {
 		this.memberUsernames = memberUsernames;
 	}
-	public RoomRequest(String name, String description, Long creatorUserId, List<String> memberUsernames) {
+	public RoomRequest(String name, String description, List<String> memberUsernames) {
 		super();
 		this.name = name;
 		this.description = description;
-		this.creatorUserId = creatorUserId;
 		this.memberUsernames = memberUsernames;
 	}
 	

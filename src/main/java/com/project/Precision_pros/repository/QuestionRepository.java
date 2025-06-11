@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    List<Question> findByCommunity_CommunityCode(String communityCode);
+    List<Question> findByCommunity_CommunityCode(Long communityCode);
    
 }

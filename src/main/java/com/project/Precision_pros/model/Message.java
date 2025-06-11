@@ -1,7 +1,8 @@
 package com.project.Precision_pros.model;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Messages", indexes = {

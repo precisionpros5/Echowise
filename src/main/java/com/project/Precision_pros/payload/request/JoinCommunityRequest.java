@@ -3,13 +3,13 @@ package com.project.Precision_pros.payload.request;
 
 
 public class JoinCommunityRequest {
-    private String communityCode;
+    private Long communityCode;
 
-    public String getCommunityCode() {
+    public Long getCommunityCode() {
         return communityCode;
     }
 
-    public void setCommunityCode(String communityCode) {
+    public void setCommunityCode(Long communityCode) {
         this.communityCode = communityCode;
     }
 }

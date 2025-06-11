@@ -42,7 +42,7 @@ public class QuestionService {
     @Autowired
     private QuestionTagsRepository questionTagsRepository;
     
-	public List<QuestionResponse> getAllQuestionsByCommunity(String communityCode) {
+	public List<QuestionResponse> getAllQuestionsByCommunity(Long communityCode) {
 		List<Question> questions = questionRepository.findByCommunity_CommunityCode(communityCode);
 		System.out.print(questions);
 		
@@ -56,7 +56,7 @@ public class QuestionService {
 		return mapToResponse(question);
 	}
 
-	public QuestionResponse createQuestion(String communityCode, String username, QuestionRequest request) {
+	public QuestionResponse createQuestion(Long communityCode, String username, QuestionRequest request) {
 		Community community = communityRepository.findByCommunityCode(communityCode)
 				.orElseThrow(() -> new EntityNotFoundException("Community not found"));
 

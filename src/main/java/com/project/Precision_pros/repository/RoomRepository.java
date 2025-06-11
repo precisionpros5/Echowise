@@ -11,7 +11,7 @@ import com.project.Precision_pros.model.DiscussionRoom;
 
 @Repository
 public interface RoomRepository extends JpaRepository<DiscussionRoom, Long> {
-    List<DiscussionRoom> findByCommunity_CommunityCode(String communityId);
+    List<DiscussionRoom> findByCommunity_CommunityCode(Long communityId);
 
     @Query(value = "SELECT room_id FROM discussion_rooms WHERE community_id = :communityId AND is_private = false", nativeQuery = true)
     List<Long> findPublicRoomIdsByCommunityId(@Param("communityId") Long communityId);

@@ -61,12 +61,13 @@ public class CommunityController {
 	        
 	        
 
-	        CommunityResponse response = communityService.createCommunity(request, user.getId());
+	        CommunityResponse response = communityService.createCommunity(request, user);
+	        communityService.joinCommunity(response.getCode(), user);
 
 	        try {
 	        	List<String> member = List.of(username);
-	        	RoomRequest roomreq = new RoomRequest("public Room", "for all user in Community", user.getId(), member);
-	        	 roomService.createRoom(Long.parseLong(response.getCode()), roomreq);
+	        	RoomRequest roomreq = new RoomRequest("public Room", "for all user in Community", member);
+	        	 roomService.createRoom(response.getCode(), roomreq,user);
 	        	} catch (Exception e) {
 	        	System.out.print("Room creation failed"+ e);
 	        	}
@@ -86,7 +87,7 @@ public class CommunityController {
 				
 	}
 	@GetMapping("/detail/{id}")
-	public ResponseEntity<?> getCommunitiesDetails(@PathVariable("id") String communityCode) {
+	public ResponseEntity<?> getCommunitiesDetails(@PathVariable("id") Long communityCode) {
 	
 
 				CommunityResponse communities = communityService.getCommunity(communityCode);
@@ -102,20 +103,20 @@ public class CommunityController {
 	        User user = userRepository.findByUsername(username)
 	                                  .orElseThrow(() -> new RuntimeException("User not found"));
 
-	    			
-	        String result = communityService.joinCommunity(request.getCommunityCode(), user.getId());
+	       // System.out.print(username);
+	        String result = communityService.joinCommunity(request.getCommunityCode(), user);
 	        try {
 	        	List<String> member = List.of(username);
-	        	List<Long> roomid=roomRepository.findPublicRoomIdsByCommunityId(Long.parseLong(request.getCommunityCode()));
+	        	List<Long> roomid=roomRepository.findPublicRoomIdsByCommunityId(request.getCommunityCode());
 	        	roomService.addMembersToRoom(roomid.getFirst(), member, username);
 	        	} catch (Exception e) {
-	        	System.out.print("Room creation failed"+ e);
+	        	System.out.print("Room Join failed"+ e);
 	        	}
 	        return ResponseEntity.ok(result);
 	    
 	    }
 	        @PutMapping("/{id}")
-	        public ResponseEntity<?> updateCommunity(@PathVariable("id") String communityCode,
+	        public ResponseEntity<?> updateCommunity(@PathVariable("id") Long communityCode,
 	                                                 @RequestBody UpdateCommunityRequest request,
 	                                                 @CookieValue("precisionPros") String jwtToken) {
 	        	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
@@ -127,7 +128,7 @@ public class CommunityController {
 	        }
 
 	        @DeleteMapping("/{id}")
-	        public ResponseEntity<?> deleteCommunity(@PathVariable("id") String communityCode,
+	        public ResponseEntity<?> deleteCommunity(@PathVariable("id") Long communityCode,
 	                                                 @CookieValue("precisionPros") String jwtToken) {
 	        	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
 		        User user = userRepository.findByUsername(username)

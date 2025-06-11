@@ -16,15 +16,35 @@ public class CommunityMember {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long communityMemberId;
-
-	private Long userId;
-	private String communityId; // Match with communityCode
+    
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+	private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "community_id", nullable = false)
+	private Community community; // Match with communityCode
 	private LocalDateTime joinDate;
 
  
  
  
-    public Long getCommunityMemberId() {
+    public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Community getCommunity() {
+		return community;
+	}
+
+	public void setCommunity(Community community) {
+		this.community = community;
+	}
+
+	public Long getCommunityMemberId() {
 		return communityMemberId;
 	}
 
@@ -32,21 +52,9 @@ public class CommunityMember {
 		this.communityMemberId = communityMemberId;
 	}
 
-	public Long getUserId() {
-        return userId;
-    }
+
  
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
- 
-    public String getCommunityId() {
-        return communityId;
-    }
- 
-    public void setCommunityId(String string) {
-        this.communityId = string;
-    }
+
  
     public LocalDateTime getJoinDate() {
         return joinDate;

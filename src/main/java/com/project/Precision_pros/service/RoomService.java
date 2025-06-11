@@ -2,6 +2,7 @@ package com.project.Precision_pros.service;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,11 +62,10 @@ public class RoomService {
     }
 
   
-    public RoomResponse createRoom(Long communityId, RoomRequest request) {
+    public RoomResponse createRoom(Long communityId, RoomRequest request,User user) {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new RuntimeException("Community not found"));
-        User user = userRepository.findById(request.getCreatorUserId())
-				.orElseThrow(() -> new EntityNotFoundException("User not found"));
+        
 
         DiscussionRoom room = new DiscussionRoom();
         room.setName(request.getName());
@@ -81,12 +81,14 @@ public class RoomService {
         
         DiscussionRoom saved = roomRepository.save(room);
         if (request.getMemberUsernames() != null && !request.getMemberUsernames().isEmpty()) {
-        		request.getMemberUsernames().add(user.getUsername());
-				for (String member : request.getMemberUsernames()) {
+        	List<String> memberUsernames = new ArrayList<>(request.getMemberUsernames());
+        	memberUsernames.add(user.getUsername());
+
+				for (String member : memberUsernames) {
 			    User muser = userRepository.findByUsername(member)
 								.orElseThrow(() -> new EntityNotFoundException("User not found"));
 				RoomMember roomMember = new RoomMember();
-				roomMember.setRoomId(saved.getRoomId());
+				roomMember.setRoom(saved);
 				roomMember.setUserId(muser.getId());
 				roomMember.setJoinDate(LocalDateTime.now());
 				 roomMemberRepository.save(roomMember);
@@ -110,21 +112,21 @@ public class RoomService {
         User requestingUser = userRepository.findByUsername(requestingUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        boolean isMember = roomMemberRepository.existsByRoomIdAndUserId(roomId, requestingUser.getId());
+        boolean isMember = roomMemberRepository.existsByRoom_RoomIdAndUserId(roomId, requestingUser.getId());
         if (room.getIsPrivate() && !isMember) {
             throw new RuntimeException("Only room members can add new members.");
         }
 
         List<User> newUsers = userRepository.findByUsernameIn(newMemberUsernames);
         for (User newUser : newUsers) {
-            boolean isCommunityMember = communityMemberRepository.existsByCommunityIdAndUserId(
+            boolean isCommunityMember = communityMemberRepository.existsByCommunity_CommunityCodeAndUser_Id(
                     room.getCommunity().getCommunityCode(), newUser.getId());
             if (!isCommunityMember) {
                 throw new IllegalArgumentException("User " + newUser.getUsername() + " is not a member of the community.");
             }
 
             RoomMember roomMember = new RoomMember();
-            roomMember.setRoomId(room.getRoomId());
+            roomMember.setRoom(room);
             roomMember.setUserId(newUser.getId());
             roomMember.setJoinDate(LocalDateTime.now());
             roomMemberRepository.save(roomMember);

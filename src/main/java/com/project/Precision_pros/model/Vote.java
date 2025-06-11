@@ -4,6 +4,9 @@ package com.project.Precision_pros.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,14 +30,17 @@ public class Vote {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
+   // @OnDelete(action=OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
+   // @OnDelete(action=OnDeleteAction.CASCADE)
     private Question question;
 
     @ManyToOne
     @JoinColumn(name = "answer_id")
+    //@OnDelete(action=OnDeleteAction.CASCADE)
     private Answer answer;
 
 

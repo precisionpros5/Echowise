@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.project.Precision_pros.model.Community;
 @Repository
 public interface CommunityRepository extends JpaRepository<Community, Long> {
-		boolean existsByCommunityCode(String code);
-		@Query("SELECT c FROM Community c WHERE c.creatorUserId = :userId OR c.communityCode IN (SELECT cm.communityId FROM CommunityMember cm WHERE cm.userId = :userId)")
-		List<Community> findCommunitiesInvolvedByUserId(@Param("userId") Long userId);
-		Optional<Community> findByCommunityCode(String code);
+		boolean existsByCommunityCode(Long code);
+
+		List<Community> findByCreatorUser_Id(Long userId);
+
+		Optional<Community> findByCommunityCode(Long code);
 }

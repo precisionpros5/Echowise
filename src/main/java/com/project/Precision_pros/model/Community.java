@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Communities", indexes = {
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 public class Community {
 
     @Id
-    private String communityCode;
+    private Long communityCode;
 
     @Column(nullable = false, unique = true, length = 255)
     private String name;
@@ -26,13 +28,24 @@ public class Community {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime creationDate;
 
-    private Long creatorUserId;
 
-	public String getCommunityCode() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "creator_user_id", nullable = false)
+	private User creatorUser;
+
+
+	@OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DiscussionRoom> createdCommunities = new ArrayList<>();
+	@OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CommunityMember> CommunityMembers = new ArrayList<>();
+	@OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Question> Questions = new ArrayList<>();
+
+	public Long getCommunityCode() {
 		return communityCode;
 	}
 
-	public void setCommunityCode(String code) {
+	public void setCommunityCode(Long code) {
 		this.communityCode = code;
 	}
 
@@ -60,13 +73,14 @@ public class Community {
 		this.creationDate = creationDate;
 	}
 
-	public Long getCreatorUserId() {
-		return creatorUserId;
+	public User getCreatorUser() {
+		return creatorUser;
 	}
 
-	public void setCreatorUserId(Long creatorUserId) {
-		this.creatorUserId = creatorUserId;
+	public void setCreatorUser(User creatorUser) {
+		this.creatorUser = creatorUser;
 	}
+
 
 	
 

@@ -13,7 +13,7 @@ public class QuestionResponse {
 	private LocalDateTime creationDate;
 	private LocalDateTime lastEditedDate;
 	private String username;
-	private String communityCode;
+	private Long communityCode;
 	private QuestionStatus status;
 	private List<String> tags;
 
@@ -26,7 +26,7 @@ public class QuestionResponse {
 	}
 
 	public QuestionResponse(Long questionId, String title, String description, LocalDateTime creationDate,
-			LocalDateTime lastEditedDate, String username, String communityCode, QuestionStatus status,List<String> tags) {
+			LocalDateTime lastEditedDate, String username, Long communityCode, QuestionStatus status,List<String> tags) {
 		super();
 		this.questionId = questionId;
 		this.title = title;
@@ -87,11 +87,11 @@ public class QuestionResponse {
 		this.username = username;
 	}
 
-	public String getCommunityCode() {
+	public Long getCommunityCode() {
 		return communityCode;
 	}
 
-	public void setCommunityCode(String communityCode) {
+	public void setCommunityCode(Long communityCode) {
 		this.communityCode = communityCode;
 	}
 

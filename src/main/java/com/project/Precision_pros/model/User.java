@@ -1,6 +1,7 @@
 package com.project.Precision_pros.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -33,6 +34,7 @@ public class User {
   private String password;
 
  
+
 
   public User() {
   }

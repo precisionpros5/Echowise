@@ -3,7 +3,6 @@ package com.project.Precision_pros.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
  
@@ -33,7 +32,9 @@ public class RoomMember {
     private Long userId;
  
     @NotNull
-    private Long roomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roomId", nullable = false)
+    private DiscussionRoom room;
  
     private LocalDateTime joinDate;
  
@@ -47,15 +48,17 @@ public class RoomMember {
         this.userId = userId;
     }
  
-    public Long getRoomId() {
-        return roomId;
-    }
+
  
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
- 
-    public LocalDateTime getJoinDate() {
+    public DiscussionRoom getRoom() {
+		return room;
+	}
+
+	public void setRoom(DiscussionRoom room) {
+		this.room = room;
+	}
+
+	public LocalDateTime getJoinDate() {
         return joinDate;
     }
  

@@ -1,5 +1,7 @@
 package com.project.Precision_pros.model;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +36,20 @@ public class Question {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+   
+	@ManyToOne
+    @JoinColumn(name = "community_id", nullable = false)
+    private Community community;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private QuestionStatus status = QuestionStatus.OPEN;
+    
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Answer> Answers = new ArrayList<>();
+
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+	private List<QuestionTags> QuestionTags = new ArrayList<>();
     public Long getQuestionId() {
 		return questionId;
 	}
@@ -98,12 +114,5 @@ public class Question {
 		this.status = status;
 	}
 
-	@ManyToOne
-    @JoinColumn(name = "community_id", nullable = false)
-    private Community community;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private QuestionStatus status = QuestionStatus.OPEN;
 }
 

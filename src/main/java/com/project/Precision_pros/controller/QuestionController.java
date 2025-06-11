@@ -30,7 +30,7 @@ public class QuestionController {
 
 	// GET /api/communities/{communityId}/questions
 	@GetMapping("/communities/{communityId}/questions")
-	public ResponseEntity<List<QuestionResponse>> getQuestionsByCommunity(@PathVariable String communityId) {
+	public ResponseEntity<List<QuestionResponse>> getQuestionsByCommunity(@PathVariable Long communityId) {
 		return ResponseEntity.ok(questionService.getAllQuestionsByCommunity(communityId));
 	}
 
@@ -42,7 +42,7 @@ public class QuestionController {
 
 	// POST /api/communities/{communityId}/questions
 	@PostMapping("/communities/{communityId}/questions")
-	public ResponseEntity<QuestionResponse> createQuestion(@PathVariable String communityId,
+	public ResponseEntity<QuestionResponse> createQuestion(@PathVariable Long communityId,
 			@RequestBody QuestionRequest request,@CookieValue("precisionPros") String jwtToken) {
 		String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
 	    User user = userRepository.findByUsername(username)

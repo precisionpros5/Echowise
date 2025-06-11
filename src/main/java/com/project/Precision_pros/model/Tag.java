@@ -2,6 +2,9 @@ package com.project.Precision_pros.model;
 
 
  
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,6 +21,8 @@ public class Tag {
     @NotNull
     @Size(min = 1, max = 50)
     private String name;
+	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+	private List<QuestionTags> QuestionTags = new ArrayList<>();
 
     public Tag(String tagName) {
 		this.name=tagName;

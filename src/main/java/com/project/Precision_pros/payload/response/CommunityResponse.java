@@ -3,7 +3,7 @@ package com.project.Precision_pros.payload.response;
 public class CommunityResponse {
 
     private String name;
-    private String code;
+    private Long code;
     private String description;
 
 
@@ -13,12 +13,12 @@ public class CommunityResponse {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public CommunityResponse(String name, String code) {
+	public CommunityResponse(String name, Long code) {
         
         this.name = name;
         this.code = code;
     }
-    public CommunityResponse(String name, String code,String desc) {
+    public CommunityResponse(String name, Long code,String desc) {
         
         this.name = name;
         this.code = code;
@@ -35,11 +35,11 @@ public class CommunityResponse {
 		this.name = name;
 	}
 
-	public String getCode() {
+	public Long getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(Long code) {
 		this.code = code;
 	}
 

@@ -4,8 +4,8 @@ package com.project.Precision_pros.payload.response;
 public class RoomResponse {
     private Long id;
     private String name;
-    private String communityId;
-    public RoomResponse(Long long1, String name, String communityId) {
+    private Long communityId;
+    public RoomResponse(Long long1, String name, Long communityId) {
 		this.id = long1;
 		this.name = name;
 		this.communityId = communityId;
@@ -24,10 +24,10 @@ public class RoomResponse {
 		this.name = name;
 	}
 	
-	public String getCommunityId() {
+	public Long getCommunityId() {
 		return communityId;
 	}
-	public void setCommunityId(String communityId) {
+	public void setCommunityId(Long communityId) {
 		this.communityId = communityId;
 	}
 	

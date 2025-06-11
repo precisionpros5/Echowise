@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.RoomRequest;
 import com.project.Precision_pros.payload.response.RoomResponse;
+import com.project.Precision_pros.repository.UserRepository;
 import com.project.Precision_pros.security.jwt.JwtUtils;
 import com.project.Precision_pros.service.RoomService;
 
@@ -26,6 +27,8 @@ public class DiscussionRoomsController {
     private  RoomService roomService;
     @Autowired
     private JwtUtils jwtUtil;
+    @Autowired
+    private UserRepository userRepository;
     @GetMapping("/communities/{communityId}/rooms")
     public ResponseEntity<List<RoomResponse>> getRoomsByCommunity(@PathVariable Long communityId,@CookieValue("precisionPros") String jwtToken) {
     	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
@@ -41,8 +44,11 @@ public class DiscussionRoomsController {
 
     @PostMapping("/communities/{communityId}/rooms")
     public ResponseEntity<RoomResponse> createRoom(@PathVariable Long communityId,
-                                                   @RequestBody RoomRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(roomService.createRoom(communityId, request));
+                                                   @RequestBody RoomRequest request,@CookieValue("precisionPros") String jwtToken) {
+    	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+    	User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomService.createRoom(communityId, request,user));
     }
 
 

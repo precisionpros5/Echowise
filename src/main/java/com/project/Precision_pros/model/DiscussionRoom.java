@@ -1,6 +1,8 @@
 package com.project.Precision_pros.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -32,7 +34,10 @@ public class DiscussionRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_user_id", nullable = false)
     private User creator;
-
+	@OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoomMember> RoomMembers = new ArrayList<>();
+	@OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Message> Messages = new ArrayList<>();
  
 
     // Constructors
