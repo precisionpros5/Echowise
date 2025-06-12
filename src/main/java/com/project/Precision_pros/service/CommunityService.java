@@ -14,6 +14,7 @@ import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.CommunityRequest;
 import com.project.Precision_pros.payload.request.UpdateCommunityRequest;
 import com.project.Precision_pros.payload.response.CommunityResponse;
+import com.project.Precision_pros.payload.response.UserInfoResponse;
 import com.project.Precision_pros.repository.CommunityMemberRepository;
 import com.project.Precision_pros.repository.CommunityRepository;
 
@@ -111,7 +112,15 @@ public CommunityResponse getCommunity(Long communityCode) {
 	return new CommunityResponse(c.getName(),c.getCommunityCode(),c.getDescription());
 }
 
+public List<UserInfoResponse> getUsersInCommunity(Long communityCode) {
+    List<User> users = communityMemberRepository.findUsersByCommunityCode(communityCode);
+    return users.stream().map(this::mapToUserResponse).collect(Collectors.toList());
+}
 
+private UserInfoResponse mapToUserResponse(User user1) {
+	
+	return new UserInfoResponse(user1.getId(),user1.getUsername(),user1.getEmail());
+}
 
 
 

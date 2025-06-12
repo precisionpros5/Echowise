@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.project.Precision_pros.model.DiscussionRoom;
 import com.project.Precision_pros.model.RoomMember;
+import com.project.Precision_pros.model.User;
 
 public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer> {
 	
@@ -17,5 +18,11 @@ public interface RoomMemberRepository extends JpaRepository<RoomMember, Integer>
 	List<DiscussionRoom> findRoomsByUserIdAndCommunityId(@Param("userId") Long userId, @Param("communityId") Long communityId);
 
 	boolean existsByRoom_RoomIdAndUserId(Long roomId, Long id);
+
+
+	@Query("SELECT rm.user FROM RoomMember rm WHERE rm.room.roomId = :roomId")
+	List<User> findUsersByRoomId(@Param("roomId") Long roomId);
+
+
 
 } 

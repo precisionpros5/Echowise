@@ -18,6 +18,7 @@ import com.project.Precision_pros.model.RoomMember;
 import com.project.Precision_pros.model.User;
 import com.project.Precision_pros.payload.request.RoomRequest;
 import com.project.Precision_pros.payload.response.RoomResponse;
+import com.project.Precision_pros.payload.response.UserInfoResponse;
 import com.project.Precision_pros.repository.CommunityMemberRepository;
 import com.project.Precision_pros.repository.CommunityRepository;
 import com.project.Precision_pros.repository.RoomMemberRepository;
@@ -49,7 +50,7 @@ public class RoomService {
                 .map(room -> new RoomResponse(
                         room.getRoomId(),
                         room.getName(),
-                        room.getCommunity().getCommunityCode()))
+                        room.getCommunity().getCommunityCode(),room.getIsPrivate()))
                 .collect(Collectors.toList());
     }
 
@@ -58,7 +59,41 @@ public class RoomService {
     public RoomResponse getRoomById(Long roomId) {
         DiscussionRoom room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
-        return new RoomResponse(room.getRoomId(), room.getName(),room.getCommunity().getCommunityCode());
+        return new RoomResponse(room.getRoomId(), room.getName(),room.getCommunity().getCommunityCode(),room.getIsPrivate());
+    }
+    public void DeleteRoomById(Long roomId,User user) {
+        DiscussionRoom room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+        if(!user.getId().equals(room.getCreator().getId())) {
+        	throw new RuntimeException("Unauthorized: Only the creator can delete this room.");
+        }
+        if(!room.getIsPrivate()) {
+        	throw new RuntimeException("Public Room can't be deleted");
+        }
+        roomRepository.delete(room);
+    }
+    
+    public RoomResponse updateRoomById(Long roomId,String name,User user) {
+        DiscussionRoom room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+        
+        if(user.getId().equals(room.getCreator().getId())) {
+        room.setName(name);
+        room.setCommunity(room.getCommunity());
+        
+        room.setIsPrivate(room.getIsPrivate());
+        
+        room.setCreationDate(room.getCreationDate());
+        room.setCreator(room.getCreator());	
+       
+        
+        DiscussionRoom saved = roomRepository.save(room);
+        }
+        else {
+        	throw new RuntimeException("Only Creator Can Edit The Name And Description");
+        }
+        
+        return new RoomResponse(room.getRoomId(), room.getName(),room.getCommunity().getCommunityCode(),room.getIsPrivate());
     }
 
   
@@ -89,7 +124,7 @@ public class RoomService {
 								.orElseThrow(() -> new EntityNotFoundException("User not found"));
 				RoomMember roomMember = new RoomMember();
 				roomMember.setRoom(saved);
-				roomMember.setUserId(muser.getId());
+				roomMember.setUser(muser);
 				roomMember.setJoinDate(LocalDateTime.now());
 				 roomMemberRepository.save(roomMember);
 				}
@@ -97,7 +132,7 @@ public class RoomService {
         }
 
         
-        return new RoomResponse(saved.getRoomId(), saved.getName(),community.getCommunityCode());
+        return new RoomResponse(saved.getRoomId(), saved.getName(),saved.getCommunity().getCommunityCode(),saved.getIsPrivate());
     }
 
 
@@ -121,16 +156,38 @@ public class RoomService {
         for (User newUser : newUsers) {
             boolean isCommunityMember = communityMemberRepository.existsByCommunity_CommunityCodeAndUser_Id(
                     room.getCommunity().getCommunityCode(), newUser.getId());
+            boolean isRoomMember = roomMemberRepository.existsByRoom_RoomIdAndUserId(
+                    room.getRoomId(), newUser.getId());
             if (!isCommunityMember) {
                 throw new IllegalArgumentException("User " + newUser.getUsername() + " is not a member of the community.");
+            }
+            if (isRoomMember) {
+                throw new IllegalArgumentException("User " + newUser.getUsername() + " is existing a member of the room.");
             }
 
             RoomMember roomMember = new RoomMember();
             roomMember.setRoom(room);
-            roomMember.setUserId(newUser.getId());
+            roomMember.setUser(newUser);
             roomMember.setJoinDate(LocalDateTime.now());
             roomMemberRepository.save(roomMember);
         }
     }
+
+		public List<UserInfoResponse> getUsersInRoom(Long roomId) {
+		List<User> users = roomMemberRepository.findUsersByRoomId(roomId);
+		return users.stream().map(this::mapToUserResponse).collect(Collectors.toList());
+		}
+
+
+
+		private UserInfoResponse mapToUserResponse(User user1) {
+			
+			return new UserInfoResponse(user1.getId(),user1.getUsername(),user1.getEmail());
+		}
+
+
+
+		
+
 
 }

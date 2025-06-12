@@ -22,6 +22,7 @@ import com.project.Precision_pros.payload.request.RoomRequest;
 import com.project.Precision_pros.payload.request.UpdateCommunityRequest;
 import com.project.Precision_pros.payload.response.CommunityResponse;
 import com.project.Precision_pros.payload.response.QuestionResponse;
+import com.project.Precision_pros.payload.response.UserInfoResponse;
 import com.project.Precision_pros.repository.RoomRepository;
 import com.project.Precision_pros.repository.UserRepository;
 import com.project.Precision_pros.security.jwt.JwtUtils;
@@ -137,6 +138,12 @@ public class CommunityController {
 	            communityService.deleteCommunity(communityCode, user.getId());
 	            return ResponseEntity.ok("Community deleted successfully.");
 	        }
+
+@GetMapping("/{communityCode}/users")
+public ResponseEntity<List<UserInfoResponse>> getUsersInCommunity(@PathVariable Long communityCode) {
+return ResponseEntity.ok(communityService.getUsersInCommunity(communityCode));
+}
+
 	        }
 
 

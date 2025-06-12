@@ -27,11 +27,22 @@ public class RoomMember {
 		this.roomMemberId = roomMemberId;
 	}
 
-	@NotNull
-    
-    private Long userId;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+
  
-    @NotNull
+    public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	@NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", nullable = false)
     private DiscussionRoom room;
@@ -40,13 +51,7 @@ public class RoomMember {
  
   
  
-    public Long getUserId() {
-        return userId;
-    }
- 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+
  
 
  

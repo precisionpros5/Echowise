@@ -67,7 +67,7 @@ public class QuestionController {
 
 		String username = userDetails.getUsername();
 		questionService.deleteQuestion(id, username);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok("Question deleted successfully.");
 	}
 	
 	@GetMapping("/by-tags")

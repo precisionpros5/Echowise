@@ -5,10 +5,12 @@ public class RoomResponse {
     private Long id;
     private String name;
     private Long communityId;
-    public RoomResponse(Long long1, String name, Long communityId) {
+    private boolean isPrivate;
+    public RoomResponse(Long long1, String name, Long communityId,boolean isPrivate) {
 		this.id = long1;
 		this.name = name;
 		this.communityId = communityId;
+		this.setIsPrivate(isPrivate);
 	}
     public Long getId() {
 		return id;
@@ -29,6 +31,12 @@ public class RoomResponse {
 	}
 	public void setCommunityId(Long communityId) {
 		this.communityId = communityId;
+	}
+	public boolean getIsPrivate() {
+		return isPrivate;
+	}
+	public void setIsPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 	
 }

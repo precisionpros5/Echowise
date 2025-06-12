@@ -33,10 +33,7 @@ public class Vote {
    // @OnDelete(action=OnDeleteAction.CASCADE)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "question_id")
-   // @OnDelete(action=OnDeleteAction.CASCADE)
-    private Question question;
+ 
 
     @ManyToOne
     @JoinColumn(name = "answer_id")
@@ -71,13 +68,7 @@ public class Vote {
         this.user = user;
     }
 
-    public Question getQuestion() {
-        return question;
-    }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
 
     public Answer getAnswer() {
         return answer;
