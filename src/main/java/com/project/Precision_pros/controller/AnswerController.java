@@ -1,9 +1,12 @@
 package com.project.Precision_pros.controller;
 import com.project.Precision_pros.payload.request.AnswerRequest;
 import com.project.Precision_pros.payload.request.AnswerUpdateRequest;
+import com.project.Precision_pros.payload.request.ChatMessageRequest;
 import com.project.Precision_pros.payload.response.AnswerResponse;
+import com.project.Precision_pros.payload.response.ChatMessageResponse;
 import com.project.Precision_pros.security.jwt.JwtUtils;
 import com.project.Precision_pros.service.AnswerService;
+import com.project.Precision_pros.service.MessageService;
 
 import java.util.List;
 
@@ -78,6 +81,9 @@ public class AnswerController {
 	    answerService.acceptAnswer(id, username);
 	    return ResponseEntity.ok("Answer marked as accepted.");
 	}
+	
+
+	
 
 	
 
