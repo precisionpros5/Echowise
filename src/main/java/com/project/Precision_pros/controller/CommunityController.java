@@ -35,119 +35,104 @@ import com.project.Precision_pros.service.RoomService;
 
 public class CommunityController {
 
-	    @Autowired
-	    private CommunityService communityService;
+	@Autowired
+	private CommunityService communityService;
 
-	    @Autowired
-	    private JwtUtils jwtUtil;
+	@Autowired
+	private JwtUtils jwtUtil;
 
-	    @Autowired
-	    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-		@Autowired
-		private QuestionService questionService;
-		
-		@Autowired
-	    private  RoomService roomService;
-		@Autowired
-		private RoomRepository roomRepository;
-	    @PostMapping
-	    public ResponseEntity<?> createCommunity(
-	            @RequestBody CommunityRequest request,
-	            @CookieValue("precisionPros") String jwtToken) {
+	@Autowired
+	private QuestionService questionService;
 
-	        String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
-	        User user = userRepository.findByUsername(username)
-	                                  .orElseThrow(() -> new RuntimeException("User not found"));
-	        
-	        
+	@Autowired
+	private RoomService roomService;
+	@Autowired
+	private RoomRepository roomRepository;
 
-	        CommunityResponse response = communityService.createCommunity(request, user);
-	        communityService.joinCommunity(response.getCode(), user);
+	@PostMapping
+	public ResponseEntity<?> createCommunity(@RequestBody CommunityRequest request,
+			@CookieValue("precisionPros") String jwtToken) {
 
-	        try {
-	        	List<String> member = List.of(username);
-	        	RoomRequest roomreq = new RoomRequest("public Room", "for all user in Community", member);
-	        	 roomService.createRoom(response.getCode(), roomreq,user);
-	        	} catch (Exception e) {
-	        	System.out.print("Room creation failed"+ e);
-	        	}
+		String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
-	        return ResponseEntity.ok(response);
-	    }
-	    
+		CommunityResponse response = communityService.createCommunity(request, user);
+		communityService.joinCommunity(response.getCode(), user);
+
+		try {
+			List<String> member = List.of(username);
+			RoomRequest roomreq = new RoomRequest("public Room", "for all user in Community", member);
+			roomService.createRoom(response.getCode(), roomreq, user);
+		} catch (Exception e) {
+			System.out.print("Room creation failed" + e);
+		}
+
+		return ResponseEntity.ok(response);
+	}
 
 	@GetMapping
 	public ResponseEntity<?> getUserCommunities(@CookieValue("precisionPros") String jwtToken) {
-	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
-    User user = userRepository.findByUsername(username)
-                              .orElseThrow(() -> new RuntimeException("User not found"));
+		String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
-				List<CommunityResponse> communities = communityService.getCommunitiesInvolved(user.getId());
-				return ResponseEntity.ok(communities);
-				
+		List<CommunityResponse> communities = communityService.getCommunitiesInvolved(user.getId());
+		return ResponseEntity.ok(communities);
+
 	}
+
 	@GetMapping("/detail/{id}")
 	public ResponseEntity<?> getCommunitiesDetails(@PathVariable("id") Long communityCode) {
-	
 
-				CommunityResponse communities = communityService.getCommunity(communityCode);
-				return ResponseEntity.ok(communities);
-				
+		CommunityResponse communities = communityService.getCommunity(communityCode);
+		return ResponseEntity.ok(communities);
+
 	}
 
-	
-	    @PostMapping("/join")
-	    public ResponseEntity<?> joinCommunity(@RequestBody JoinCommunityRequest request,
-	                                           @CookieValue("precisionPros") String jwtToken) {
-	    	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
-	        User user = userRepository.findByUsername(username)
-	                                  .orElseThrow(() -> new RuntimeException("User not found"));
+	@PostMapping("/join")
+	public ResponseEntity<?> joinCommunity(@RequestBody JoinCommunityRequest request,
+			@CookieValue("precisionPros") String jwtToken) {
+		String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
-	       // System.out.print(username);
-	        String result = communityService.joinCommunity(request.getCommunityCode(), user);
-	        try {
-	        	List<String> member = List.of(username);
-	        	List<Long> roomid=roomRepository.findPublicRoomIdsByCommunityId(request.getCommunityCode());
-	        	roomService.addMembersToRoom(roomid.getFirst(), member, username);
-	        	} catch (Exception e) {
-	        	System.out.print("Room Join failed"+ e);
-	        	}
-	        return ResponseEntity.ok(result);
-	    
-	    }
-	        @PutMapping("/{id}")
-	        public ResponseEntity<?> updateCommunity(@PathVariable("id") Long communityCode,
-	                                                 @RequestBody UpdateCommunityRequest request,
-	                                                 @CookieValue("precisionPros") String jwtToken) {
-	        	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
-		        User user = userRepository.findByUsername(username)
-		                                  .orElseThrow(() -> new RuntimeException("User not found"));
+		// System.out.print(username);
+		String result = communityService.joinCommunity(request.getCommunityCode(), user);
+		try {
+			List<String> member = List.of(username);
+			List<Long> roomid = roomRepository.findPublicRoomIdsByCommunityId(request.getCommunityCode());
+			roomService.addMembersToRoom(roomid.getFirst(), member, username);
+		} catch (Exception e) {
+			System.out.print("Room Join failed" + e);
+		}
+		return ResponseEntity.ok(result);
 
-	            communityService.updateCommunity(communityCode, user.getId(), request);
-	            return ResponseEntity.ok("Community updated successfully.");
-	        }
+	}
 
-	        @DeleteMapping("/{id}")
-	        public ResponseEntity<?> deleteCommunity(@PathVariable("id") Long communityCode,
-	                                                 @CookieValue("precisionPros") String jwtToken) {
-	        	String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
-		        User user = userRepository.findByUsername(username)
-		                                  .orElseThrow(() -> new RuntimeException("User not found"));
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateCommunity(@PathVariable("id") Long communityCode,
+			@RequestBody UpdateCommunityRequest request, @CookieValue("precisionPros") String jwtToken) {
+		String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
-	            communityService.deleteCommunity(communityCode, user.getId());
-	            return ResponseEntity.ok("Community deleted successfully.");
-	        }
+		communityService.updateCommunity(communityCode, user.getId(), request);
+		return ResponseEntity.ok("Community updated successfully.");
+	}
 
-@GetMapping("/{communityCode}/users")
-public ResponseEntity<List<UserInfoResponse>> getUsersInCommunity(@PathVariable Long communityCode) {
-return ResponseEntity.ok(communityService.getUsersInCommunity(communityCode));
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteCommunity(@PathVariable("id") Long communityCode,
+			@CookieValue("precisionPros") String jwtToken) {
+		String username = jwtUtil.getUserNameFromJwtToken(jwtToken);
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+		communityService.deleteCommunity(communityCode, user.getId());
+		return ResponseEntity.ok("Community deleted successfully.");
+	}
+
+	@GetMapping("/{communityCode}/users")
+	public ResponseEntity<List<UserInfoResponse>> getUsersInCommunity(@PathVariable Long communityCode) {
+		return ResponseEntity.ok(communityService.getUsersInCommunity(communityCode));
+	}
+
 }
-
-	        }
-
-
-
-
-
-
