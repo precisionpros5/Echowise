@@ -101,12 +101,10 @@ public class RoomService {
 		room.setCreator(user);
 
 		DiscussionRoom saved = roomRepository.save(room);
-		if (request.getMemberUsernames() != null && !request.getMemberUsernames().isEmpty()) {
-			List<String> memberUsernames = new ArrayList<>(request.getMemberUsernames());
-			memberUsernames.add(user.getUsername());
-
-			for (String member : memberUsernames) {
-
+		
+			
+			for (String member : request.getMemberUsernames()) {
+				System.out.print(member);
 				User muser = userRepository.findByUsername(member)
 						.orElseThrow(() -> new EntityNotFoundException("User not found"));
 				boolean isRoomMember = roomMemberRepository.existsByRoom_RoomIdAndUserId(room.getRoomId(),muser.getId() );
@@ -119,7 +117,7 @@ public class RoomService {
 				roomMember.setUser(muser);
 				roomMember.setJoinDate(LocalDateTime.now());
 				roomMemberRepository.save(roomMember);
-			}
+			
 
 		}
 
