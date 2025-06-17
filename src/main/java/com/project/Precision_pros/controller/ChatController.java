@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate; // Import SimpMessagingTemplate
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,8 +57,8 @@ public class ChatController {
     }
     // Corrected WebSocket method to explicitly send messages
     @MessageMapping("/chat.sendMessage") // Client sends to /app/chat.sendMessage
-    // REMOVED: @SendTo("/topic/room/{roomId}") // No longer needed with manual send
-    public void sendWebSocketMessage(@Payload ChatMessageRequest message) { // Changed return type to void
+    @SendTo("/topic/room/{roomId}") // No longer needed with manual send
+    public ChatMessageResponse sendWebSocketMessage(@Payload ChatMessageRequest message) { // Changed return type to void
         Long roomId = message.getRoomId(); // Get roomId directly from the payload
         logger.info("Received WebSocket message from userId: {} for roomId: {}, content: {}",
                 message.getUserId(), roomId, message.getContent());
@@ -70,5 +71,6 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/room/" + roomId, response);
         logger.info("WebSocket message saved and manually sent to topic /topic/room/{}. Username: {}, Content: {}",
                 roomId, response.getUsername(), response.getContent());
+        return response;
     }
 }
